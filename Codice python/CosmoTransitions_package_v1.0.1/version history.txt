@@ -1,0 +1,37 @@
+cosmoTransitions version history.
+
+----------------------------------------------------------
+
+v1.0.1
+
+finiteT.py:
+• changed scipy.factorial to scipy.misc.factorial. The former doesn't import under some versions of scipy.
+
+generic_potential.py:
+• calcTcTrans() and calcFullTrans() now ensure that a transition is only labeled as second-order if the low-temperature phase does not extend above the transition temperature (this is a double-check). The quantities 'alpha' and 'dphi' will now correctly have non-zero values when the above check fails.
+• getPhases() now defaults to retrieve only those phases that are possible to transition to from the high-temperature phase. Set 'startHigh=False' to retrieve all phases.
+
+pathDeformation.py:
+• Fixed a bug which would incorrectly report the metastability/stability of the metastable minimum.
+• added findAction() to the class secondOrderTransitions, which will always return -inf. (this allows greater interchangeability with class fullTransitions)
+
+transitionFinder.py:
+• traceMinimum() has been greatly modified to simplify its logic. The biggest improvement comes from calculating eigenvalues of the Hessian matrix at each step to ensure that the minimum is a minimum, instead of just relying upon fmin() to find the minimum.
+• traceMultiMin() now finds the initial minimum of a phase more accurately, which should reduce tracing phases redundantly.
+• Added entries 'highLink' and 'lowLink' to the dictionaries returned by traceMultiMin() to better describe the relationships between the phases. Changed the name of the entry 'linkedPhase' to 'linkedFrom'. Modified removeRedundantPhases() to better preserve these links.
+• During second-order transitions, the high-temperature phase has zero probability to tunnel to another phase in a first-order transition (before, a phase would have an infinite tunneling rate once it disappears regardless of whether or not it was in a second-order transition).
+• Reworked the logic in fullTransitions.findTransitionForIndex.
+• Fixed bug in getStartPhase when there are multiple start phases.
+
+tunneling1D.py:
+• Older versions of scipy would give incorrect values for the modified bessel functions I_nu(x) for nu a non-negative integer. This occurs in exactSolution() for alpha < 3. The cases alpha = 0 and alpha = 2 can be solved with regular exponentials, so in those cases I now write the solution with bessel functions. This should increase compatibility with older versions of scipy.
+• Added parameter 'x_inf' to class bubbleProfile which sets the maximum value of x (effectively, the largest radius of the bubble) which we're willing to calculate before setting the radius to be infinite.
+
+testModels.py:
+• This is now better commented so that others can easily copy and modify the model1 class.
+
+----------------------------------------------------------
+
+v1.0
+
+Initial release.
